@@ -3,51 +3,828 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps Yard Documentation</title>
+    <title>DevOps Yard - Documentation Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            line-height: 1.6;
+        :root {
+            --primary: #0a0e27;
+            --secondary: #1a1f3a;
+            --accent: #00d4ff;
+            --accent-2: #7c3aed;
+            --accent-3: #f59e0b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --card-bg: rgba(26, 31, 58, 0.6);
+            --border: rgba(0, 212, 255, 0.2);
         }
-        h1 { color: #0f172a; }
-        .doc-list {
-            list-style: none;
+
+        * {
+            margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        .doc-list li {
-            margin: 15px 0;
+
+        body {
+            font-family: 'Poppins', -apple-system, sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        .doc-list a {
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.05;
+            background-image: 
+                linear-gradient(var(--accent) 1px, transparent 1px),
+                linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            padding: 3rem 0 5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: fadeInDown 0.8s ease-out;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto 0;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+        }
+
+        .search-box::placeholder {
+            color: var(--text-dim);
+        }
+
+        /* Stats Bar */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: block;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Category Section */
+        .category-section {
+            margin: 4rem 0;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+        }
+
+        .category-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .category-count {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            background: var(--card-bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+
+        /* Tool Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
             text-decoration: none;
-            color: #1e293b;
-            border-left: 4px solid #3b82f6;
-            transition: all 0.3s;
+            color: inherit;
+            display: block;
         }
-        .doc-list a:hover {
-            background: #e0e7ff;
-            transform: translateX(5px);
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
+
+        .tool-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .tool-card.coming-soon {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .tool-card.coming-soon:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .tool-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .tool-description {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tag.coming-soon-tag {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
+            color: var(--accent-3);
+        }
+
+        .tag.available {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 6rem;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-dim);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .category-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Scroll Animation */
+        .fade-in {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.3s; }
+        .fade-in:nth-child(4) { animation-delay: 0.4s; }
+        .fade-in:nth-child(5) { animation-delay: 0.5s; }
+        .fade-in:nth-child(6) { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
-    <h1>🚀 DevOps Yard Documentation</h1>
-    <p>Welcome to DevOps Yard's documentation hub.</p>
-    
-    <ul class="doc-list">
-        <li>
-            <a href="/github-docs/">
-                <strong>GitHub & CI/CD Workflow Guide</strong><br>
-                <small>Complete guide for Git branching, PR workflow, and CI/CD automation</small>
-            </a>
-        </li>
-        <!-- Add more documentation links here -->
-    </ul>
+    <div class="bg-animation"></div>
+    <div class="grid-overlay"></div>
+
+    <header>
+        <div class="container">
+            <h1 class="logo">⚡ DevOps Yard</h1>
+            <p class="tagline">Your Complete DevOps Documentation Hub</p>
+            <p class="subtitle">Master modern DevOps tools, cloud platforms, and automation workflows with comprehensive guides and best practices.</p>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search documentation... (e.g., Docker, Kubernetes, AWS)">
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number">19</span>
+                    <p class="stat-label">Total Guides</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">6</span>
+                    <p class="stat-label">Categories</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">100%</span>
+                    <p class="stat-label">Free & Open</p>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">∞</span>
+                    <p class="stat-label">Always Updated</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Version Control & Collaboration -->
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">🔄</span>
+                <h2 class="category-title">Version Control & Collaboration</h2>
+                <span class="category-count">2 guides</span>
+            </div>
+            <div class="tools-grid">
+                <a href="/github-docs/" class="tool-card fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">📚</div>
+                        <h3 class="tool-name">Git & GitHub</h3>
+                    </div>
+                    <p class="tool-description">Complete guide for Git branching strategies, pull request workflows, and collaboration best practices.</p>
+                    <div class="tool-tags">
+                        <span class="tag available">Available</span>
+                        <span class="tag">Workflow</span>
+                        <span class="tag">CI/CD</span>
+                    </div>
+                </a>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">⚙️</div>
+                        <h3 class="tool-name">GitHub Actions</h3>
+                    </div>
+                    <p class="tool-description">Automate workflows with GitHub Actions - CI/CD pipelines, automated testing, and deployment strategies.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Automation</span>
+                        <span class="tag">CI/CD</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Containerization & Orchestration -->
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">🐳</span>
+                <h2 class="category-title">Containerization & Orchestration</h2>
+                <span class="category-count">4 guides</span>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🐋</div>
+                        <h3 class="tool-name">Docker</h3>
+                    </div>
+                    <p class="tool-description">Master containerization with Docker - images, containers, volumes, networks, and Dockerfile best practices.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Containers</span>
+                        <span class="tag">DevOps</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">☸️</div>
+                        <h3 class="tool-name">Kubernetes</h3>
+                    </div>
+                    <p class="tool-description">Complete Kubernetes guide - pods, deployments, services, scaling, monitoring, and production best practices.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Orchestration</span>
+                        <span class="tag">Cloud Native</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🔴</div>
+                        <h3 class="tool-name">OpenShift</h3>
+                    </div>
+                    <p class="tool-description">Enterprise Kubernetes with OpenShift - deployment patterns, operators, security, and enterprise features.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Enterprise</span>
+                        <span class="tag">Platform</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">☁️</div>
+                        <h3 class="tool-name">PCF (Pivotal Cloud Foundry)</h3>
+                    </div>
+                    <p class="tool-description">Platform-as-a-Service with PCF - application deployment, buildpacks, services, and cloud-native development.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">PaaS</span>
+                        <span class="tag">Cloud</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CI/CD & Automation -->
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">🚀</span>
+                <h2 class="category-title">CI/CD & Automation</h2>
+                <span class="category-count">2 guides</span>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🔧</div>
+                        <h3 class="tool-name">Jenkins</h3>
+                    </div>
+                    <p class="tool-description">Comprehensive Jenkins guide - pipelines, declarative syntax, plugins, agents, and advanced automation.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">CI/CD</span>
+                        <span class="tag">Pipeline</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🔄</div>
+                        <h3 class="tool-name">CI/CD Best Practices</h3>
+                    </div>
+                    <p class="tool-description">Industry-standard CI/CD patterns - testing strategies, deployment patterns, and continuous delivery workflows.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Best Practices</span>
+                        <span class="tag">DevOps</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Infrastructure as Code -->
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">📝</span>
+                <h2 class="category-title">Infrastructure as Code</h2>
+                <span class="category-count">2 guides</span>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🏗️</div>
+                        <h3 class="tool-name">Terraform</h3>
+                    </div>
+                    <p class="tool-description">Infrastructure as Code with Terraform - providers, modules, state management, and multi-cloud deployments.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">IaC</span>
+                        <span class="tag">Multi-Cloud</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🎭</div>
+                        <h3 class="tool-name">Ansible</h3>
+                    </div>
+                    <p class="tool-description">Configuration management with Ansible - playbooks, roles, inventory, modules, and automation at scale.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Automation</span>
+                        <span class="tag">Config</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cloud Platforms -->
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">☁️</span>
+                <h2 class="category-title">Cloud Platforms</h2>
+                <span class="category-count">7 guides</span>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🌩️</div>
+                        <h3 class="tool-name">AWS (Amazon Web Services)</h3>
+                    </div>
+                    <p class="tool-description">Complete AWS guide - EC2, S3, Lambda, RDS, VPC, IAM, and cloud architecture best practices.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Cloud</span>
+                        <span class="tag">AWS</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">📘</div>
+                        <h3 class="tool-name">Azure Cloud</h3>
+                    </div>
+                    <p class="tool-description">Microsoft Azure essentials - VMs, App Services, Azure DevOps, Active Directory, and hybrid cloud solutions.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Cloud</span>
+                        <span class="tag">Microsoft</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🔵</div>
+                        <h3 class="tool-name">AKS (Azure Kubernetes Service)</h3>
+                    </div>
+                    <p class="tool-description">Managed Kubernetes on Azure - cluster setup, scaling, monitoring, security, and integration with Azure services.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Kubernetes</span>
+                        <span class="tag">Azure</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🟠</div>
+                        <h3 class="tool-name">EKS (Elastic Kubernetes Service)</h3>
+                    </div>
+                    <p class="tool-description">Managed Kubernetes on AWS - cluster management, node groups, IAM roles, and AWS service integration.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Kubernetes</span>
+                        <span class="tag">AWS</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🌈</div>
+                        <h3 class="tool-name">Google Cloud Platform</h3>
+                    </div>
+                    <p class="tool-description">GCP fundamentals - Compute Engine, Cloud Storage, GKE, BigQuery, and serverless solutions.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Cloud</span>
+                        <span class="tag">Google</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">💙</div>
+                        <h3 class="tool-name">IBM Cloud</h3>
+                    </div>
+                    <p class="tool-description">Enterprise cloud with IBM - Cloud Foundry, Kubernetes, Watson AI, and hybrid cloud architecture.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Cloud</span>
+                        <span class="tag">Enterprise</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🌐</div>
+                        <h3 class="tool-name">Multi-Cloud Strategy</h3>
+                    </div>
+                    <p class="tool-description">Multi-cloud architecture - vendor selection, cost optimization, disaster recovery, and cloud-agnostic design.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Strategy</span>
+                        <span class="tag">Architecture</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Operating Systems & Emerging Tech -->
+        <section class="category-section">
+            <div class="category-header">
+                <span class="category-icon">🖥️</span>
+                <h2 class="category-title">Systems & Emerging Technologies</h2>
+                <span class="category-count">2 guides</span>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🐧</div>
+                        <h3 class="tool-name">Linux Administration</h3>
+                    </div>
+                    <p class="tool-description">Linux essentials - system administration, shell scripting, networking, security, and performance tuning.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">SysAdmin</span>
+                        <span class="tag">Unix</span>
+                    </div>
+                </div>
+
+                <div class="tool-card coming-soon fade-in">
+                    <div class="tool-header">
+                        <div class="tool-icon">🔗</div>
+                        <h3 class="tool-name">Blockchain & DevOps</h3>
+                    </div>
+                    <p class="tool-description">Blockchain infrastructure - smart contract deployment, node management, and DevOps for blockchain applications.</p>
+                    <div class="tool-tags">
+                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag">Blockchain</span>
+                        <span class="tag">Web3</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://github.com/DevOpsYard/devops-docs" target="_blank">GitHub</a>
+                <a href="#contribute">Contribute</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <p>&copy; 2026 DevOps Yard. Open Source Documentation for the DevOps Community.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">Built with ⚡ by the DevOps community, for the DevOps community.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Search functionality
+        const searchBox = document.getElementById('searchBox');
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        searchBox.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            toolCards.forEach(card => {
+                const toolName = card.querySelector('.tool-name').textContent.toLowerCase();
+                const toolDescription = card.querySelector('.tool-description').textContent.toLowerCase();
+                const tags = Array.from(card.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase()).join(' ');
+                
+                if (toolName.includes(searchTerm) || toolDescription.includes(searchTerm) || tags.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeInUp 0.3s ease-out forwards';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show/hide category sections if all cards are hidden
+            document.querySelectorAll('.category-section').forEach(section => {
+                const visibleCards = section.querySelectorAll('.tool-card[style*="display: block"], .tool-card:not([style*="display: none"])');
+                if (visibleCards.length === 0 && searchTerm !== '') {
+                    section.style.display = 'none';
+                } else {
+                    section.style.display = 'block';
+                }
+            });
+        });
+
+        // Prevent navigation for coming soon cards
+        document.querySelectorAll('.tool-card.coming-soon').forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
