@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub & CI/CD Workflow Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --shadow: rgba(15, 23, 42, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 4rem 0 5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="2" height="2" fill="%23ffffff" opacity="0.05"/></svg>');
+            opacity: 0.3;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px -1px var(--shadow);
+            border-left: 4px solid var(--accent);
+        }
+
+        .toc h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin-bottom: 0.75rem;
+        }
+
+        .toc a {
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .toc a:hover {
+            color: var(--accent);
+            padding-left: 1rem;
+            border-bottom-color: var(--accent);
+        }
+
+        /* Main Content */
+        main {
+            background: white;
+            border-radius: 1rem;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 15px -3px var(--shadow);
+        }
+
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--accent);
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+            color: var(--secondary);
+            margin: 2rem 0 1rem;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text);
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        code {
+            font-family: 'IBM Plex Mono', monospace;
+            background: var(--bg-alt);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            box-shadow: 0 1px 3px 0 var(--shadow);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.025em;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: var(--bg-alt);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        ul ul, ol ol {
+            margin: 0.5rem 0;
+        }
+
+        /* Badges and Labels */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .badge-info {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+        }
+
+        /* Info Boxes */
+        .info-box {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 2rem 0;
+            border-left: 4px solid;
+        }
+
+        .info-box.success {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: var(--success);
+        }
+
+        .info-box.warning {
+            background: rgba(245, 158, 11, 0.05);
+            border-color: var(--warning);
+        }
+
+        .info-box.danger {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: var(--danger);
+        }
+
+        .info-box.info {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: var(--accent);
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Checkmarks */
+        .do-dont {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .do, .dont {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 2px solid;
+        }
+
+        .do {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: var(--success);
+        }
+
+        .dont {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: var(--danger);
+        }
+
+        .do h4::before {
+            content: '✅ ';
+        }
+
+        .dont h4::before {
+            content: '❌ ';
+        }
+
+        /* Workflow Diagram */
+        .workflow {
+            background: var(--bg-alt);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            margin: 2rem 0;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 2;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 3rem 0;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            main {
+                padding: 1.5rem;
+            }
+
+            .do-dont {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Link Styles */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-light);
+            text-decoration: underline;
+        }
+
+        /* Command Examples */
+        .command-example {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #10b981;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-family: 'IBM Plex Mono', monospace;
+            margin: 0.5rem 0;
+            display: block;
+            border-left: 3px solid var(--success);
+        }
+
+        .branch-flow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--bg-alt);
+            border-radius: 0.5rem;
+        }
+
+        .branch-flow span {
+            font-family: 'IBM Plex Mono', monospace;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 0.375rem;
+            border: 2px solid var(--border);
+        }
+
+        .branch-flow .arrow {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>GitHub & CI/CD Workflow Guide</h1>
+            <p class="subtitle">Master your development workflow with modern Git practices and automated deployments</p>
+            <span class="version-badge">Version 2.0 • February 2026</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#overview">1. Overview</a></li>
+                <li><a href="#branch-strategy">2. Branch Strategy</a></li>
+                <li><a href="#feature-development">3. Feature Branch Development</a></li>
+                <li><a href="#pull-request">4. Pull Request Workflow</a></li>
+                <li><a href="#cicd-pipeline">5. CI/CD Pipeline</a></li>
+                <li><a href="#troubleshooting">6. Troubleshooting</a></li>
+                <li><a href="#quick-reference">7. Quick Reference</a></li>
+                <li><a href="#best-practices">8. Best Practices</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="overview">
+                <h2>1. Overview</h2>
+                <p>This guide establishes the standard Git branching model, pull request workflow, and CI/CD automation for all application repositories.</p>
+
+                <h3>1.1 Environment Branches</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Branch</th>
+                            <th>Environment</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>dev</code></td>
+                            <td>Development</td>
+                            <td>Integration and feature testing</td>
+                        </tr>
+                        <tr>
+                            <td><code>test</code></td>
+                            <td>QA/Staging</td>
+                            <td>Quality assurance and UAT</td>
+                        </tr>
+                        <tr>
+                            <td><code>prod</code></td>
+                            <td>Production</td>
+                            <td>Live production environment</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>1.2 Core Principles</h3>
+                <div class="info-box info">
+                    <strong>Essential Rules</strong>
+                    <ul>
+                        <li><strong>Never push directly</strong> to <code>dev</code>, <code>test</code>, or <code>prod</code> branches</li>
+                        <li><strong>All changes</strong> must flow through feature branches and pull requests</li>
+                        <li><strong>CI/CD automation</strong> handles validation and deployment</li>
+                        <li><strong>Code review</strong> is required before merging</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="branch-strategy">
+                <h2>2. Branch Strategy</h2>
+
+                <h3>2.1 Branch Naming Convention</h3>
+                <pre><code>feature/&lt;feature-name&gt;       # New features
+bugfix/&lt;bug-description&gt;     # Bug fixes
+hotfix/&lt;critical-fix&gt;        # Urgent production fixes
+chore/&lt;task-description&gt;     # Maintenance tasks</code></pre>
+
+                <h4>Examples:</h4>
+                <ul>
+                    <li><code>feature/user-authentication</code></li>
+                    <li><code>bugfix/login-validation-error</code></li>
+                    <li><code>hotfix/payment-gateway-timeout</code></li>
+                    <li><code>chore/update-dependencies</code></li>
+                </ul>
+
+                <h3>2.2 Branch Lifecycle</h3>
+                <div class="workflow">
+dev → feature branch → PR → merge → dev<br>
+test → hotfix branch → PR → merge → test<br>
+prod → hotfix branch → PR → merge → prod
+                </div>
+            </section>
+
+            <section id="feature-development">
+                <h2>3. Feature Branch Development</h2>
+
+                <h3>3.1 Creating a Feature Branch (CLI)</h3>
+
+                <h4>From dev (most common):</h4>
+                <pre><code>git checkout dev
+git pull origin dev
+git checkout -b feature/user-profile-page</code></pre>
+
+                <h4>From test:</h4>
+                <pre><code>git checkout test
+git pull origin test
+git checkout -b bugfix/api-timeout</code></pre>
+
+                <h4>From prod (hotfixes only):</h4>
+                <pre><code>git checkout prod
+git pull origin prod
+git checkout -b hotfix/security-patch</code></pre>
+
+                <h3>3.2 Creating a Feature Branch (GitHub UI)</h3>
+                <ol>
+                    <li>Navigate to your repository on GitHub</li>
+                    <li>Click the <strong>branch dropdown</strong> (usually shows "main" or current branch)</li>
+                    <li>Select the base branch (<code>dev</code>, <code>test</code>, or <code>prod</code>)</li>
+                    <li>Type your new branch name in the search box</li>
+                    <li>Click <strong>"Create branch: &lt;branch-name&gt; from &lt;base-branch&gt;"</strong></li>
+                </ol>
+
+                <h3>3.3 Making Changes</h3>
+                <pre><code># Check current status
+git status
+
+# Stage all changes
+git add .
+
+# Or stage specific files
+git add src/components/Login.js
+
+# Commit with descriptive message
+git commit -m "Add email validation to login form"
+
+# Push to remote
+git push origin feature/user-profile-page</code></pre>
+
+                <h3>3.4 Keeping Your Branch Updated</h3>
+                <p><strong>Regularly sync with the base branch:</strong></p>
+                <pre><code>git checkout feature/user-profile-page
+git pull origin dev</code></pre>
+
+                <div class="info-box warning">
+                    <strong>If conflicts occur:</strong>
+                    <pre><code># Resolve conflicts in your editor
+git add .
+git commit -m "Resolve merge conflicts with dev"
+git push origin feature/user-profile-page</code></pre>
+                </div>
+            </section>
+
+            <section id="pull-request">
+                <h2>4. Pull Request Workflow</h2>
+
+                <h3>4.1 Creating a Pull Request</h3>
+                <ol>
+                    <li>Navigate to your repository on <strong>GitHub</strong></li>
+                    <li>Click <strong>Pull requests</strong> tab</li>
+                    <li>Click <strong>New pull request</strong></li>
+                    <li>Configure the PR:
+                        <ul>
+                            <li><strong>Base branch</strong>: <code>dev</code>, <code>test</code>, or <code>prod</code> (where you want to merge)</li>
+                            <li><strong>Compare branch</strong>: Your feature branch</li>
+                        </ul>
+                    </li>
+                    <li>Add a <strong>clear title</strong> (e.g., "Add user authentication system")</li>
+                    <li>Write a <strong>detailed description</strong></li>
+                    <li>Assign <strong>reviewers</strong> (if required)</li>
+                    <li>Add <strong>labels</strong> (e.g., <span class="badge badge-info">enhancement</span>, <span class="badge badge-danger">bug</span>, <span class="badge badge-warning">urgent</span>)</li>
+                    <li>Click <strong>Create pull request</strong></li>
+                </ol>
+
+                <h4>Example PR Description:</h4>
+                <pre><code>## What does this PR do?
+Adds email/password authentication with JWT tokens
+
+## Changes made
+- Created Login component
+- Added auth middleware
+- Implemented token refresh logic
+
+## Testing done
+- Unit tests for auth functions
+- Manual testing on dev environment
+
+## Related issues
+Closes #123</code></pre>
+
+                <h3>4.2 Pull Request Review Process</h3>
+                
+                <div class="do-dont">
+                    <div class="do">
+                        <h4>For Authors</h4>
+                        <ul>
+                            <li>Respond to review comments promptly</li>
+                            <li>Make requested changes in new commits</li>
+                            <li>Mark conversations as resolved when addressed</li>
+                            <li>Request re-review after updates</li>
+                        </ul>
+                    </div>
+                    <div class="dont">
+                        <h4>For Reviewers</h4>
+                        <ul>
+                            <li>Review code for quality, standards, and security</li>
+                            <li>Test functionality if possible</li>
+                            <li>Provide constructive feedback</li>
+                            <li>Approve when satisfied</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>4.3 Merging the Pull Request</h3>
+                <ol>
+                    <li>Ensure <strong>all checks pass</strong> (CI, tests, code quality)</li>
+                    <li>Obtain required <strong>approvals</strong></li>
+                    <li>Resolve any <strong>merge conflicts</strong></li>
+                    <li>Click <strong>Merge pull request</strong></li>
+                    <li>Choose merge strategy:
+                        <ul>
+                            <li><strong>Merge commit</strong>: Preserves full history (recommended)</li>
+                            <li><strong>Squash and merge</strong>: Combines all commits into one</li>
+                            <li><strong>Rebase and merge</strong>: Linear history without merge commit</li>
+                        </ul>
+                    </li>
+                    <li><strong>Delete the branch</strong> after successful merge</li>
+                </ol>
+            </section>
+
+            <section id="cicd-pipeline">
+                <h2>5. CI/CD Pipeline</h2>
+
+                <h3>5.1 CI (Continuous Integration)</h3>
+                <p><strong>Purpose:</strong> Validate code quality before deployment</p>
+
+                <div class="info-box success">
+                    <strong>What CI Does:</strong>
+                    <ul>
+                        <li>Installs project dependencies</li>
+                        <li>Runs linters and code quality checks</li>
+                        <li>Executes unit and integration tests</li>
+                        <li>Builds the application</li>
+                        <li>Runs security scans</li>
+                        <li>Fails the pipeline if any step fails</li>
+                    </ul>
+                </div>
+
+                <h3>5.2 CD (Continuous Deployment)</h3>
+                <p><strong>Purpose:</strong> Deploy validated code to the target environment</p>
+
+                <div class="info-box info">
+                    <strong>What CD Does:</strong>
+                    <ul>
+                        <li>Creates a backup of the current deployment</li>
+                        <li>Pulls the latest code from the branch</li>
+                        <li>Installs/updates dependencies</li>
+                        <li>Runs build commands</li>
+                        <li>Manages PM2 process lifecycle</li>
+                        <li>Verifies deployment health</li>
+                        <li>Rolls back on failure (if configured)</li>
+                    </ul>
+                </div>
+
+                <h3>5.3 Automatic CICD Execution</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Merge Target</th>
+                            <th>CI Execution</th>
+                            <th>CD Deployment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>dev</code></td>
+                            <td><span class="badge badge-success">✅ Runs automatically</span></td>
+                            <td>Deploys to DEV</td>
+                        </tr>
+                        <tr>
+                            <td><code>test</code></td>
+                            <td><span class="badge badge-success">✅ Runs automatically</span></td>
+                            <td>Deploys to TEST</td>
+                        </tr>
+                        <tr>
+                            <td><code>prod</code></td>
+                            <td><span class="badge badge-success">✅ Runs automatically</span></td>
+                            <td>Deploys to PROD</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box warning">
+                    <strong>Key Points:</strong>
+                    <ul>
+                        <li>CICD triggers <strong>only on successful PR merge</strong></li>
+                        <li>CI <strong>always runs before</strong> CD</li>
+                        <li>CD <strong>only executes if CI succeeds</strong></li>
+                        <li>No manual intervention required for automatic deployments</li>
+                    </ul>
+                </div>
+
+                <h3>5.4 Manual CI Workflow Execution</h3>
+                <p>Use this to test CI without merging:</p>
+                <ol>
+                    <li>Go to your repository on <strong>GitHub</strong></li>
+                    <li>Click <strong>Actions</strong> tab</li>
+                    <li>Select <strong>CI workflow</strong> from the left sidebar</li>
+                    <li>Click <strong>Run workflow</strong> (top right)</li>
+                    <li>Select the <strong>branch</strong> to run CI against</li>
+                    <li>Click <strong>Run workflow</strong></li>
+                    <li>Monitor the workflow progress in real-time</li>
+                </ol>
+
+                <h4>When to use manual CI:</h4>
+                <ul>
+                    <li>Testing CI configuration changes</li>
+                    <li>Validating feature branch before creating PR</li>
+                    <li>Debugging CI failures</li>
+                </ul>
+
+                <h3>5.5 Manual CD Workflow Execution</h3>
+                <p>Use this for controlled deployments:</p>
+                <ol>
+                    <li>Go to your repository on <strong>GitHub</strong></li>
+                    <li>Click <strong>Actions</strong> tab</li>
+                    <li>Select <strong>CD workflow</strong> from the left sidebar</li>
+                    <li>Click <strong>Run workflow</strong></li>
+                    <li>Select the <strong>target environment</strong>:
+                        <ul>
+                            <li><code>dev</code> → Development server</li>
+                            <li><code>test</code> → QA/Staging server</li>
+                            <li><code>prod</code> → Production server</li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>Run workflow</strong></li>
+                    <li>Monitor deployment progress</li>
+                </ol>
+
+                <h4>When to use manual CD:</h4>
+                <ul>
+                    <li>Deploying a specific commit outside normal flow</li>
+                    <li>Re-deploying after infrastructure changes</li>
+                    <li>Emergency rollback scenarios</li>
+                    <li>Testing CD configuration</li>
+                </ul>
+            </section>
+
+            <section id="troubleshooting">
+                <h2>6. Troubleshooting</h2>
+
+                <h3>6.1 Common Issues</h3>
+
+                <h4>Merge Conflicts</h4>
+                <pre><code># Update your branch with latest base branch
+git checkout feature/my-feature
+git pull origin dev
+
+# If conflicts occur, resolve them manually
+# Then stage and commit
+git add .
+git commit -m "Resolve merge conflicts"
+git push origin feature/my-feature</code></pre>
+
+                <h4>CI Failing</h4>
+                <ol>
+                    <li>Check the <strong>Actions</strong> tab for error logs</li>
+                    <li>Run tests locally: <code>npm test</code> or <code>yarn test</code></li>
+                    <li>Fix issues and push again</li>
+                    <li>CI will automatically re-run on new push</li>
+                </ol>
+
+                <h4>CD Failing</h4>
+                <ol>
+                    <li>Review CD workflow logs in <strong>Actions</strong></li>
+                    <li>Check server connectivity and permissions</li>
+                    <li>Verify environment variables are configured</li>
+                    <li>Check PM2 application status on server</li>
+                    <li>Contact DevOps if infrastructure issues</li>
+                </ol>
+
+                <h4>Branch Out of Sync</h4>
+                <pre><code># Fetch all remote branches
+git fetch origin
+
+# Update your local branch
+git checkout dev
+git pull origin dev</code></pre>
+
+                <div class="info-box danger">
+                    <strong>Accidentally Pushed to Protected Branch</strong>
+                    <ol>
+                        <li>Contact repository administrator immediately</li>
+                        <li>Do not attempt to force push</li>
+                        <li>A revert commit may be required</li>
+                    </ol>
+                </div>
+
+                <h3>6.2 Recovery Commands</h3>
+
+                <h4>Undo last commit (before push):</h4>
+                <pre><code>git reset HEAD~1</code></pre>
+
+                <h4>Undo last commit (after push):</h4>
+                <pre><code>git revert HEAD
+git push origin &lt;branch&gt;</code></pre>
+
+                <h4>Discard local changes:</h4>
+                <pre><code>git checkout -- &lt;file&gt;
+# Or discard all changes
+git reset --hard HEAD</code></pre>
+            </section>
+
+            <section id="quick-reference">
+                <h2>7. Quick Reference</h2>
+
+                <h3>7.1 Essential Git Commands</h3>
+                <pre><code># Check current status
+git status
+
+# View commit history
+git log --oneline
+
+# Switch branches
+git checkout dev
+git checkout test
+git checkout prod
+
+# Pull latest changes
+git pull origin &lt;branch&gt;
+
+# Stage changes
+git add .                    # All files
+git add &lt;specific-file&gt;      # Specific file
+
+# Commit changes
+git commit -m "Your message"
+
+# Push changes
+git push origin &lt;branch&gt;
+
+# View all branches
+git branch -a
+
+# Delete local branch
+git branch -d feature/old-feature
+
+# View remote URL
+git remote -v</code></pre>
+
+                <h3>7.2 Daily Workflow Checklist</h3>
+
+                <div class="info-box success">
+                    <strong>Starting work:</strong>
+                    <ul>
+                        <li>☐ Pull latest code: <code>git pull origin dev</code></li>
+                        <li>☐ Create feature branch: <code>git checkout -b feature/my-feature</code></li>
+                    </ul>
+                </div>
+
+                <div class="info-box info">
+                    <strong>During development:</strong>
+                    <ul>
+                        <li>☐ Commit frequently with clear messages</li>
+                        <li>☐ Keep branch synced: <code>git pull origin dev</code></li>
+                        <li>☐ Run tests locally</li>
+                    </ul>
+                </div>
+
+                <div class="info-box warning">
+                    <strong>Before creating PR:</strong>
+                    <ul>
+                        <li>☐ All tests passing locally</li>
+                        <li>☐ Code follows project standards</li>
+                        <li>☐ Branch is up to date with base branch</li>
+                        <li>☐ Commit messages are clear and descriptive</li>
+                    </ul>
+                </div>
+
+                <div class="info-box success">
+                    <strong>After PR approval:</strong>
+                    <ul>
+                        <li>☐ Merge the PR</li>
+                        <li>☐ Delete the feature branch</li>
+                        <li>☐ Verify automatic deployment succeeded</li>
+                        <li>☐ Test in target environment</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="best-practices">
+                <h2>8. Best Practices</h2>
+
+                <h3>8.1 Branching Best Practices</h3>
+                <div class="do-dont">
+                    <div class="do">
+                        <h4>Do</h4>
+                        <ul>
+                            <li>Always create branches from latest <code>dev</code>/<code>test</code>/<code>prod</code></li>
+                            <li>Use descriptive branch names</li>
+                            <li>Keep branches short-lived (&lt; 3-5 days)</li>
+                            <li>Delete branches after merging</li>
+                            <li>Pull before creating new branches</li>
+                        </ul>
+                    </div>
+                    <div class="dont">
+                        <h4>Don't</h4>
+                        <ul>
+                            <li>Push directly to <code>dev</code>, <code>test</code>, or <code>prod</code></li>
+                            <li>Create branches from other feature branches</li>
+                            <li>Let branches become stale (&gt;1 week)</li>
+                            <li>Reuse old branch names</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>8.2 Commit Best Practices</h3>
+                <div class="do-dont">
+                    <div class="do">
+                        <h4>Do</h4>
+                        <ul>
+                            <li>Write clear, descriptive commit messages</li>
+                            <li>Commit logical units of work</li>
+                            <li>Use present tense ("Add feature" not "Added feature")</li>
+                            <li>Reference issue numbers when applicable</li>
+                            <li>Commit frequently</li>
+                        </ul>
+                    </div>
+                    <div class="dont">
+                        <h4>Don't</h4>
+                        <ul>
+                            <li>Commit commented-out code</li>
+                            <li>Include sensitive data (keys, passwords)</li>
+                            <li>Make massive commits with unrelated changes</li>
+                            <li>Use vague messages like "fixed stuff" or "WIP"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>Good commit messages:</h4>
+                <pre><code>Add user authentication with JWT
+Fix null pointer exception in payment handler
+Update dependencies to latest stable versions
+Refactor database connection logic</code></pre>
+
+                <h4>Bad commit messages:</h4>
+                <pre><code>fixed stuff
+WIP
+asdfasdf
+final version</code></pre>
+
+                <h3>8.3 Pull Request Best Practices</h3>
+                <div class="do-dont">
+                    <div class="do">
+                        <h4>Do</h4>
+                        <ul>
+                            <li>Write detailed PR descriptions</li>
+                            <li>Link related issues</li>
+                            <li>Keep PRs focused and small</li>
+                            <li>Request reviews from appropriate team members</li>
+                            <li>Respond to feedback promptly</li>
+                            <li>Test your changes before creating PR</li>
+                        </ul>
+                    </div>
+                    <div class="dont">
+                        <h4>Don't</h4>
+                        <ul>
+                            <li>Create PRs with failing tests</li>
+                            <li>Merge without required approvals</li>
+                            <li>Ignore review feedback</li>
+                            <li>Create PRs with hundreds of file changes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>8.4 CI/CD Best Practices</h3>
+                <div class="do-dont">
+                    <div class="do">
+                        <h4>Do</h4>
+                        <ul>
+                            <li>Monitor CI/CD workflows regularly</li>
+                            <li>Fix failing builds immediately</li>
+                            <li>Test CI changes in feature branches</li>
+                            <li>Use manual CD sparingly</li>
+                            <li>Review deployment logs after each release</li>
+                        </ul>
+                    </div>
+                    <div class="dont">
+                        <h4>Don't</h4>
+                        <ul>
+                            <li>Ignore failing CI checks</li>
+                            <li>Bypass CI/CD process</li>
+                            <li>Deploy without CI validation</li>
+                            <li>Skip testing in lower environments</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>8.5 Security Best Practices</h3>
+                <div class="do-dont">
+                    <div class="do">
+                        <h4>Do</h4>
+                        <ul>
+                            <li>Use environment variables for secrets</li>
+                            <li>Rotate credentials regularly</li>
+                            <li>Review dependencies for vulnerabilities</li>
+                            <li>Enable branch protection rules</li>
+                            <li>Require code reviews</li>
+                        </ul>
+                    </div>
+                    <div class="dont">
+                        <h4>Don't</h4>
+                        <ul>
+                            <li>Commit API keys, passwords, or tokens</li>
+                            <li>Disable security checks</li>
+                            <li>Grant unnecessary permissions</li>
+                            <li>Ignore security warnings</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>8.6 Workflow Diagrams</h3>
+
+                <h4>Feature Development Flow</h4>
+                <div class="workflow">
+dev branch
+    ↓
+Create feature branch
+    ↓
+Make changes locally
+    ↓
+Commit & push
+    ↓
+Create Pull Request
+    ↓
+Code review
+    ↓
+CI runs automatically
+    ↓
+Merge to dev
+    ↓
+CD deploys to DEV automatically
+                </div>
+
+                <h4>Hotfix Flow</h4>
+                <div class="workflow">
+prod branch
+    ↓
+Create hotfix branch
+    ↓
+Fix critical issue
+    ↓
+Create PR to prod
+    ↓
+Emergency review
+    ↓
+CI validates
+    ↓
+Merge to prod
+    ↓
+CD deploys to PROD
+    ↓
+Backport to test and dev
+                </div>
+            </section>
+
+            <section id="support">
+                <h2>Support and Resources</h2>
+                <ul>
+                    <li><strong>Repository Issues</strong>: Use GitHub Issues for bug reports and feature requests</li>
+                    <li><strong>Team Communication</strong>: [Your team's Slack/Teams channel]</li>
+                    <li><strong>DevOps Contact</strong>: [DevOps team email/contact]</li>
+                    <li><strong>Documentation</strong>: [Link to additional docs]</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p><strong>Last Updated:</strong> February 2026 | <strong>Version:</strong> 2.0</p>
+            <p>© 2026 GitHub & CI/CD Workflow Guide</p>
+        </div>
+    </footer>
+</body>
+</html>
