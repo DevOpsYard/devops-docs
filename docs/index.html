@@ -250,6 +250,7 @@
             box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
         }
 
+        /* Coming Soon State - ADD THIS CLASS TO MAKE CARDS "COMING SOON" */
         .tool-card.coming-soon {
             opacity: 0.6;
             cursor: not-allowed;
@@ -308,6 +309,7 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        /* Coming Soon Tag - SHOWN WHEN .coming-soon CLASS IS ADDED */
         .tag.coming-soon-tag {
             background: rgba(245, 158, 11, 0.1);
             border-color: rgba(245, 158, 11, 0.3);
@@ -455,31 +457,29 @@
                 <span class="category-count">2 guides</span>
             </div>
             <div class="tools-grid">
-                <a href="/github-docs/" class="tool-card fade-in">
+                <a href="/git/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">📚</div>
-                        <h3 class="tool-name">Git & GitHub</h3>
+                        <h3 class="tool-name">Git</h3>
                     </div>
-                    <p class="tool-description">Complete guide for Git branching strategies, pull request workflows, and collaboration best practices.</p>
+                    <p class="tool-description">Complete Git version control guide - branching, merging, rebasing, and collaboration workflows.</p>
                     <div class="tool-tags">
-                        <span class="tag available">Available</span>
+                        <span class="tag">Version Control</span>
                         <span class="tag">Workflow</span>
-                        <span class="tag">CI/CD</span>
                     </div>
                 </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/github-actions/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">⚙️</div>
                         <h3 class="tool-name">GitHub Actions</h3>
                     </div>
                     <p class="tool-description">Automate workflows with GitHub Actions - CI/CD pipelines, automated testing, and deployment strategies.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Automation</span>
                         <span class="tag">CI/CD</span>
                     </div>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -491,57 +491,53 @@
                 <span class="category-count">4 guides</span>
             </div>
             <div class="tools-grid">
-                <div class="tool-card coming-soon fade-in">
+                <a href="/docker/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🐋</div>
                         <h3 class="tool-name">Docker</h3>
                     </div>
                     <p class="tool-description">Master containerization with Docker - images, containers, volumes, networks, and Dockerfile best practices.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag available">Available</span>
                         <span class="tag">Containers</span>
-                        <span class="tag">DevOps</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/kubernetes/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">☸️</div>
                         <h3 class="tool-name">Kubernetes</h3>
                     </div>
                     <p class="tool-description">Complete Kubernetes guide - pods, deployments, services, scaling, monitoring, and production best practices.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Orchestration</span>
                         <span class="tag">Cloud Native</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/openshift/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🔴</div>
                         <h3 class="tool-name">OpenShift</h3>
                     </div>
                     <p class="tool-description">Enterprise Kubernetes with OpenShift - deployment patterns, operators, security, and enterprise features.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Enterprise</span>
                         <span class="tag">Platform</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/pcf/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">☁️</div>
                         <h3 class="tool-name">PCF (Pivotal Cloud Foundry)</h3>
                     </div>
                     <p class="tool-description">Platform-as-a-Service with PCF - application deployment, buildpacks, services, and cloud-native development.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">PaaS</span>
                         <span class="tag">Cloud</span>
                     </div>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -553,31 +549,29 @@
                 <span class="category-count">2 guides</span>
             </div>
             <div class="tools-grid">
-                <div class="tool-card coming-soon fade-in">
+                <a href="/jenkins/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🔧</div>
                         <h3 class="tool-name">Jenkins</h3>
                     </div>
                     <p class="tool-description">Comprehensive Jenkins guide - pipelines, declarative syntax, plugins, agents, and advanced automation.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">CI/CD</span>
                         <span class="tag">Pipeline</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/cicd/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🔄</div>
                         <h3 class="tool-name">CI/CD Best Practices</h3>
                     </div>
                     <p class="tool-description">Industry-standard CI/CD patterns - testing strategies, deployment patterns, and continuous delivery workflows.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Best Practices</span>
                         <span class="tag">DevOps</span>
                     </div>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -589,31 +583,29 @@
                 <span class="category-count">2 guides</span>
             </div>
             <div class="tools-grid">
-                <div class="tool-card coming-soon fade-in">
+                <a href="/terraform/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🏗️</div>
                         <h3 class="tool-name">Terraform</h3>
                     </div>
                     <p class="tool-description">Infrastructure as Code with Terraform - providers, modules, state management, and multi-cloud deployments.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">IaC</span>
                         <span class="tag">Multi-Cloud</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/ansible/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🎭</div>
                         <h3 class="tool-name">Ansible</h3>
                     </div>
                     <p class="tool-description">Configuration management with Ansible - playbooks, roles, inventory, modules, and automation at scale.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Automation</span>
                         <span class="tag">Config</span>
                     </div>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -625,96 +617,89 @@
                 <span class="category-count">7 guides</span>
             </div>
             <div class="tools-grid">
-                <div class="tool-card coming-soon fade-in">
+                <a href="/aws/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🌩️</div>
                         <h3 class="tool-name">AWS (Amazon Web Services)</h3>
                     </div>
                     <p class="tool-description">Complete AWS guide - EC2, S3, Lambda, RDS, VPC, IAM, and cloud architecture best practices.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Cloud</span>
                         <span class="tag">AWS</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/azure/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">📘</div>
                         <h3 class="tool-name">Azure Cloud</h3>
                     </div>
                     <p class="tool-description">Microsoft Azure essentials - VMs, App Services, Azure DevOps, Active Directory, and hybrid cloud solutions.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Cloud</span>
                         <span class="tag">Microsoft</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/aks/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🔵</div>
                         <h3 class="tool-name">AKS (Azure Kubernetes Service)</h3>
                     </div>
                     <p class="tool-description">Managed Kubernetes on Azure - cluster setup, scaling, monitoring, security, and integration with Azure services.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Kubernetes</span>
                         <span class="tag">Azure</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/eks/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🟠</div>
                         <h3 class="tool-name">EKS (Elastic Kubernetes Service)</h3>
                     </div>
                     <p class="tool-description">Managed Kubernetes on AWS - cluster management, node groups, IAM roles, and AWS service integration.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Kubernetes</span>
                         <span class="tag">AWS</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/gcp/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🌈</div>
                         <h3 class="tool-name">Google Cloud Platform</h3>
                     </div>
                     <p class="tool-description">GCP fundamentals - Compute Engine, Cloud Storage, GKE, BigQuery, and serverless solutions.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Cloud</span>
                         <span class="tag">Google</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/ibm-cloud/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">💙</div>
                         <h3 class="tool-name">IBM Cloud</h3>
                     </div>
                     <p class="tool-description">Enterprise cloud with IBM - Cloud Foundry, Kubernetes, Watson AI, and hybrid cloud architecture.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Cloud</span>
                         <span class="tag">Enterprise</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/multi-cloud/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🌐</div>
                         <h3 class="tool-name">Multi-Cloud Strategy</h3>
                     </div>
                     <p class="tool-description">Multi-cloud architecture - vendor selection, cost optimization, disaster recovery, and cloud-agnostic design.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Strategy</span>
                         <span class="tag">Architecture</span>
                     </div>
-                </div>
+                </a>
             </div>
         </section>
 
@@ -726,31 +711,29 @@
                 <span class="category-count">2 guides</span>
             </div>
             <div class="tools-grid">
-                <div class="tool-card coming-soon fade-in">
+                <a href="/linux/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🐧</div>
                         <h3 class="tool-name">Linux Administration</h3>
                     </div>
                     <p class="tool-description">Linux essentials - system administration, shell scripting, networking, security, and performance tuning.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
+                        <span class="tag available">Available</span>
                         <span class="tag">SysAdmin</span>
-                        <span class="tag">Unix</span>
                     </div>
-                </div>
+                </a>
 
-                <div class="tool-card coming-soon fade-in">
+                <a href="/blockchain/" class="tool-card fade-in">
                     <div class="tool-header">
                         <div class="tool-icon">🔗</div>
                         <h3 class="tool-name">Blockchain & DevOps</h3>
                     </div>
                     <p class="tool-description">Blockchain infrastructure - smart contract deployment, node management, and DevOps for blockchain applications.</p>
                     <div class="tool-tags">
-                        <span class="tag coming-soon-tag">Coming Soon</span>
                         <span class="tag">Blockchain</span>
                         <span class="tag">Web3</span>
                     </div>
-                </div>
+                </a>
             </div>
         </section>
     </main>
@@ -800,7 +783,7 @@
             });
         });
 
-        // Prevent navigation for coming soon cards
+        // Prevent navigation for coming soon cards (if any are added)
         document.querySelectorAll('.tool-card.coming-soon').forEach(card => {
             card.addEventListener('click', (e) => {
                 e.preventDefault();
