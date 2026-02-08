@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Guide - DevOps Yard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a0e27;
+            --secondary: #1a1f3a;
+            --accent: #00d4ff;
+            --accent-2: #7c3aed;
+            --accent-3: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --shadow: rgba(15, 23, 42, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'IBM Plex Sans', -apple-system, sans-serif; line-height: 1.7; color: var(--text); background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%); min-height: 100vh; }
+        .navbar { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .navbar .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .navbar-brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: white; font-size: 1.5rem; font-weight: 700; }
+        .home-icon { width: 40px; height: 40px; background: rgba(0, 212, 255, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: all 0.3s ease; }
+        .home-icon:hover { background: var(--accent); transform: scale(1.1); }
+        .navbar-title { font-size: 1.25rem; }
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; }
+        .breadcrumb a { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb-separator { color: rgba(255, 255, 255, 0.4); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        main { background: white; border-radius: 1rem; padding: 3rem; margin: 3rem auto; box-shadow: 0 10px 15px -3px var(--shadow); }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--primary); margin-bottom: 1rem; letter-spacing: -0.02em; }
+        h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--primary); margin: 2.5rem 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--accent); font-weight: 700; }
+        h3 { font-size: 1.5rem; color: var(--secondary); margin: 2rem 0 1rem; font-weight: 600; }
+        h4 { font-size: 1.25rem; color: var(--text); margin: 1.5rem 0 0.75rem; font-weight: 600; }
+        p { margin-bottom: 1.25rem; color: var(--text); }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem; line-height: 1.6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+        code { font-family: 'IBM Plex Mono', monospace; background: var(--bg-alt); padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-size: 0.9em; color: var(--accent); }
+        pre code { background: transparent; padding: 0; color: inherit; }
+        table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: white; box-shadow: 0 1px 3px 0 var(--shadow); border-radius: 0.5rem; overflow: hidden; }
+        thead { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; }
+        th { padding: 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); }
+        tbody tr:hover { background: var(--bg-alt); }
+        ul, ol { margin: 1.5rem 0; padding-left: 2rem; }
+        li { margin-bottom: 0.75rem; color: var(--text); }
+        .info-box { padding: 1.5rem; border-radius: 0.75rem; margin: 2rem 0; border-left: 4px solid; }
+        .info-box.success { background: rgba(16, 185, 129, 0.05); border-color: var(--success); }
+        .info-box.warning { background: rgba(245, 158, 11, 0.05); border-color: var(--warning); }
+        .info-box.danger { background: rgba(239, 68, 68, 0.05); border-color: var(--danger); }
+        .info-box.info { background: rgba(59, 130, 246, 0.05); border-color: var(--accent); }
+        footer { background: var(--primary); color: rgba(255, 255, 255, 0.8); padding: 2rem 0; margin-top: 4rem; text-align: center; }
+        a { color: var(--accent); text-decoration: none; transition: color 0.3s ease; }
+        a:hover { color: var(--accent-2); text-decoration: underline; }
+        @media (max-width: 768px) { .navbar .container { flex-direction: column; gap: 1rem; } main { padding: 1.5rem; } h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">
+                <div class="home-icon">🏠</div>
+                <span class="navbar-title">DevOps Yard</span>
+            </a>
+            <div class="breadcrumb">
+                <a href="/">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>Docker</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main>
+            <h1>🐋 Docker Containerization Guide</h1>
+            <p><strong>Master Docker containerization - from basic concepts to production-ready deployments.</strong></p>
+
+            <section id="overview">
+                <h2>1. Docker Overview</h2>
+                <p>Docker is a platform for developing, shipping, and running applications in containers. Containers package applications with all dependencies, ensuring consistency across environments.</p>
+
+                <div class="info-box info">
+                    <strong>Key Benefits:</strong>
+                    <ul>
+                        <li>Consistent environments across development, testing, and production</li>
+                        <li>Lightweight and fast compared to virtual machines</li>
+                        <li>Easy application deployment and scaling</li>
+                        <li>Isolation and security</li>
+                        <li>Efficient resource utilization</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="installation">
+                <h2>2. Installation</h2>
+
+                <h3>2.1 Ubuntu/Debian</h3>
+                <pre><code># Update package index
+sudo apt update
+
+# Install dependencies
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+
+# Add Docker GPG key
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# Add Docker repository
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install Docker
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Add user to docker group
+sudo usermod -aG docker $USER
+
+# Verify installation
+docker --version
+docker run hello-world</code></pre>
+
+                <h3>2.2 RHEL/CentOS</h3>
+                <pre><code># Install using yum
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker</code></pre>
+            </section>
+
+            <section id="basic-commands">
+                <h2>3. Essential Docker Commands</h2>
+
+                <h3>3.1 Container Lifecycle</h3>
+                <pre><code># Run a container
+docker run nginx                    # Run nginx
+docker run -d nginx                 # Detached mode
+docker run -d -p 8080:80 nginx     # Port mapping
+docker run -d --name my-nginx nginx # Named container
+docker run -it ubuntu bash          # Interactive terminal
+
+# List containers
+docker ps                           # Running containers
+docker ps -a                        # All containers
+docker ps -q                        # Only IDs
+
+# Stop/start containers
+docker stop container_id
+docker start container_id
+docker restart container_id
+
+# Remove containers
+docker rm container_id
+docker rm -f container_id           # Force remove running
+docker container prune              # Remove all stopped
+
+# Execute commands in running container
+docker exec -it container_id bash
+docker exec container_id ls /app</code></pre>
+
+                <h3>3.2 Image Management</h3>
+                <pre><code># Pull images
+docker pull nginx
+docker pull nginx:1.21
+docker pull ubuntu:22.04
+
+# List images
+docker images
+docker image ls
+
+# Remove images
+docker rmi image_id
+docker image prune                  # Remove unused images
+docker image prune -a              # Remove all unused
+
+# Tag images
+docker tag nginx:latest myrepo/nginx:v1.0
+
+# Push to registry
+docker push myrepo/nginx:v1.0
+
+# Search images
+docker search nginx
+
+# Inspect image
+docker inspect nginx
+docker history nginx</code></pre>
+
+                <h3>3.3 Container Operations</h3>
+                <pre><code># View logs
+docker logs container_id
+docker logs -f container_id         # Follow logs
+docker logs --tail 100 container_id # Last 100 lines
+
+# View stats
+docker stats
+docker stats container_id
+
+# Inspect container
+docker inspect container_id
+
+# Copy files
+docker cp file.txt container_id:/app/
+docker cp container_id:/app/file.txt ./
+
+# View port mappings
+docker port container_id</code></pre>
+            </section>
+
+            <section id="dockerfile">
+                <h2>4. Dockerfile Best Practices</h2>
+
+                <h3>4.1 Basic Dockerfile</h3>
+                <pre><code># Use official base image
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --production
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Run application
+CMD ["node", "server.js"]</code></pre>
+
+                <h3>4.2 Multi-Stage Build</h3>
+                <pre><code># Build stage
+FROM node:18 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY package*.json ./
+EXPOSE 3000
+CMD ["node", "dist/server.js"]</code></pre>
+
+                <h3>4.3 Python Application</h3>
+                <pre><code>FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application
+COPY . .
+
+# Create non-root user
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8000
+
+CMD ["python", "app.py"]</code></pre>
+
+                <h3>4.4 Build and Run</h3>
+                <pre><code># Build image
+docker build -t myapp:latest .
+docker build -t myapp:v1.0 -f Dockerfile.prod .
+
+# Build with build args
+docker build --build-arg VERSION=1.0 -t myapp .
+
+# Run built image
+docker run -d -p 3000:3000 --name myapp myapp:latest</code></pre>
+            </section>
+
+            <section id="volumes">
+                <h2>5. Docker Volumes and Data Persistence</h2>
+
+                <h3>5.1 Volume Types</h3>
+                <pre><code># Named volumes (recommended)
+docker volume create mydata
+docker run -d -v mydata:/app/data nginx
+
+# Bind mounts (local directory)
+docker run -d -v /host/path:/container/path nginx
+docker run -d -v $(pwd):/app node:18
+
+# tmpfs (temporary, in memory)
+docker run -d --tmpfs /app/cache nginx</code></pre>
+
+                <h3>5.2 Volume Management</h3>
+                <pre><code># List volumes
+docker volume ls
+
+# Inspect volume
+docker volume inspect mydata
+
+# Remove volume
+docker volume rm mydata
+
+# Remove unused volumes
+docker volume prune
+
+# Backup volume
+docker run --rm -v mydata:/data -v $(pwd):/backup alpine tar czf /backup/backup.tar.gz /data
+
+# Restore volume
+docker run --rm -v mydata:/data -v $(pwd):/backup alpine tar xzf /backup/backup.tar.gz -C /</code></pre>
+            </section>
+
+            <section id="networking">
+                <h2>6. Docker Networking</h2>
+
+                <h3>6.1 Network Types</h3>
+                <pre><code># Create custom network
+docker network create mynetwork
+
+# List networks
+docker network ls
+
+# Run container on network
+docker run -d --network mynetwork --name web nginx
+docker run -d --network mynetwork --name db postgres
+
+# Inspect network
+docker network inspect mynetwork
+
+# Remove network
+docker network rm mynetwork</code></pre>
+
+                <h3>6.2 Network Modes</h3>
+                <pre><code># Bridge (default)
+docker run -d nginx
+
+# Host network (container uses host network)
+docker run -d --network host nginx
+
+# None (no networking)
+docker run -d --network none nginx
+
+# Connect to existing container's network
+docker run -d --network container:web alpine</code></pre>
+
+                <h3>6.3 Port Publishing</h3>
+                <pre><code># Publish single port
+docker run -d -p 8080:80 nginx
+
+# Publish all exposed ports
+docker run -d -P nginx
+
+# Publish to specific host IP
+docker run -d -p 127.0.0.1:8080:80 nginx
+
+# Publish multiple ports
+docker run -d -p 80:80 -p 443:443 nginx</code></pre>
+            </section>
+
+            <section id="docker-compose">
+                <h2>7. Docker Compose</h2>
+
+                <h3>7.1 Basic docker-compose.yml</h3>
+                <pre><code>version: '3.8'
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    networks:
+      - webnet
+    restart: unless-stopped
+
+  app:
+    build: ./app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+    depends_on:
+      - db
+    networks:
+      - webnet
+
+  db:
+    image: postgres:15
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=secretpass
+      - POSTGRES_DB=myapp
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    driver: bridge
+
+volumes:
+  pgdata:</code></pre>
+
+                <h3>7.2 Compose Commands</h3>
+                <pre><code># Start services
+docker compose up
+docker compose up -d                # Detached mode
+docker compose up --build           # Rebuild images
+
+# Stop services
+docker compose down                 # Stop and remove
+docker compose down -v              # Remove volumes too
+docker compose stop                 # Stop without removing
+
+# View logs
+docker compose logs
+docker compose logs -f web          # Follow specific service
+
+# Scale services
+docker compose up -d --scale app=3
+
+# Execute command
+docker compose exec web bash
+docker compose exec db psql -U postgres
+
+# View running services
+docker compose ps</code></pre>
+            </section>
+
+            <section id="best-practices">
+                <h2>8. Best Practices</h2>
+
+                <div class="info-box success">
+                    <strong>Docker Best Practices:</strong>
+                    <ul>
+                        <li>✅ Use official base images</li>
+                        <li>✅ Use specific tags, not <code>latest</code></li>
+                        <li>✅ Multi-stage builds for smaller images</li>
+                        <li>✅ Minimize layers - combine RUN commands</li>
+                        <li>✅ Don't run as root - create non-root user</li>
+                        <li>✅ Use .dockerignore file</li>
+                        <li>✅ Scan images for vulnerabilities</li>
+                        <li>✅ Use health checks</li>
+                        <li>✅ Keep containers ephemeral</li>
+                        <li>✅ One process per container</li>
+                    </ul>
+                </div>
+
+                <h3>8.1 .dockerignore Example</h3>
+                <pre><code># .dockerignore
+node_modules
+npm-debug.log
+.git
+.gitignore
+README.md
+.env
+.env.local
+dist
+coverage
+.vscode
+.idea
+*.md</code></pre>
+
+                <h3>8.2 Security Scanning</h3>
+                <pre><code># Scan image for vulnerabilities
+docker scan myapp:latest
+
+# Use Trivy for scanning
+docker run aquasec/trivy image myapp:latest
+
+# Scan with Snyk
+snyk container test myapp:latest</code></pre>
+            </section>
+
+            <section id="troubleshooting">
+                <h2>9. Troubleshooting</h2>
+
+                <h3>9.1 Common Issues</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Issue</th>
+                            <th>Diagnosis</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Container exits immediately</td>
+                            <td><code>docker logs container_id</code></td>
+                            <td>Check logs for errors, verify CMD/ENTRYPOINT</td>
+                        </tr>
+                        <tr>
+                            <td>Cannot connect to container</td>
+                            <td><code>docker port container_id</code><br><code>docker inspect container_id</code></td>
+                            <td>Verify port mapping, check firewall</td>
+                        </tr>
+                        <tr>
+                            <td>Out of disk space</td>
+                            <td><code>docker system df</code></td>
+                            <td><code>docker system prune -a</code></td>
+                        </tr>
+                        <tr>
+                            <td>Permission denied</td>
+                            <td>Check user groups</td>
+                            <td><code>sudo usermod -aG docker $USER</code><br>Logout and login</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>9.2 Cleanup Commands</h3>
+                <pre><code># Remove all stopped containers
+docker container prune
+
+# Remove all unused images
+docker image prune -a
+
+# Remove all unused volumes
+docker volume prune
+
+# Remove all unused networks
+docker network prune
+
+# Remove everything unused
+docker system prune -a --volumes
+
+# View disk usage
+docker system df
+docker system df -v</code></pre>
+            </section>
+
+            <section id="resources">
+                <h2>10. Additional Resources</h2>
+                <ul>
+                    <li><a href="https://docs.docker.com/" target="_blank">Official Docker Documentation</a></li>
+                    <li><a href="https://hub.docker.com/" target="_blank">Docker Hub</a></li>
+                    <li><a href="https://github.com/docker/awesome-compose" target="_blank">Awesome Docker Compose Examples</a></li>
+                    <li><a href="https://docs.docker.com/develop/dev-best-practices/" target="_blank">Docker Development Best Practices</a></li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 DevOps Yard. Open Source Documentation.</p>
+        </div>
+    </footer>
+</body>
+</html>

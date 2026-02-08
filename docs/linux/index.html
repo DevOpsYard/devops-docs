@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Administration Guide - DevOps Yard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a0e27;
+            --secondary: #1a1f3a;
+            --accent: #00d4ff;
+            --accent-2: #7c3aed;
+            --accent-3: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --shadow: rgba(15, 23, 42, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .home-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .home-icon:hover {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .navbar-title {
+            font-size: 1.25rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        .breadcrumb-separator {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        main {
+            background: white;
+            border-radius: 1rem;
+            padding: 3rem;
+            margin: 3rem auto;
+            box-shadow: 0 10px 15px -3px var(--shadow);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 2.5rem 0 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--accent);
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin: 2rem 0 1rem;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text);
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        code {
+            font-family: 'IBM Plex Mono', monospace;
+            background: var(--bg-alt);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            box-shadow: 0 1px 3px 0 var(--shadow);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: var(--bg-alt);
+        }
+
+        ul, ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .info-box {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 2rem 0;
+            border-left: 4px solid;
+        }
+
+        .info-box.success {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: var(--success);
+        }
+
+        .info-box.warning {
+            background: rgba(245, 158, 11, 0.05);
+            border-color: var(--warning);
+        }
+
+        .info-box.danger {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: var(--danger);
+        }
+
+        .info-box.info {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: var(--accent);
+        }
+
+        footer {
+            background: var(--primary);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-2);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .navbar .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            main {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">
+                <div class="home-icon">🏠</div>
+                <span class="navbar-title">DevOps Yard</span>
+            </a>
+            <div class="breadcrumb">
+                <a href="/">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>Linux Administration</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main>
+            <h1>🐧 Linux Administration Guide</h1>
+            <p><strong>Master Linux system administration, shell scripting, networking, security, and performance tuning for DevOps excellence.</strong></p>
+
+            <section id="overview">
+                <h2>1. Overview</h2>
+                <p>Linux is the backbone of modern DevOps infrastructure. This comprehensive guide covers everything from basic commands to advanced system administration, automation, and troubleshooting.</p>
+
+                <div class="info-box info">
+                    <strong>What You'll Learn:</strong>
+                    <ul>
+                        <li>Essential Linux commands and file system navigation</li>
+                        <li>User and permission management</li>
+                        <li>Shell scripting and automation</li>
+                        <li>Networking and security configuration</li>
+                        <li>Performance monitoring and troubleshooting</li>
+                        <li>Package management and system updates</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="essential-commands">
+                <h2>2. Essential Linux Commands</h2>
+
+                <h3>2.1 File System Navigation</h3>
+                <pre><code># Change directory
+cd /path/to/directory
+cd ~                    # Home directory
+cd ..                   # Parent directory
+cd -                    # Previous directory
+
+# List files
+ls                      # List files
+ls -la                  # List all with details
+ls -lh                  # Human readable sizes
+ls -lt                  # Sort by modification time
+
+# Print working directory
+pwd
+
+# Create directories
+mkdir new_directory
+mkdir -p path/to/nested/directory
+
+# Remove files and directories
+rm file.txt
+rm -rf directory/       # Remove recursively (DANGEROUS!)
+
+# Copy and move
+cp source.txt destination.txt
+cp -r source_dir/ destination_dir/
+mv old_name.txt new_name.txt
+mv file.txt /new/location/</code></pre>
+
+                <h3>2.2 File Content Operations</h3>
+                <pre><code># View file contents
+cat file.txt            # Display entire file
+less file.txt           # Page through file
+head file.txt           # First 10 lines
+tail file.txt           # Last 10 lines
+tail -f logfile.txt     # Follow file in real-time
+
+# Search within files
+grep "pattern" file.txt
+grep -r "pattern" directory/
+grep -i "pattern" file.txt      # Case insensitive
+
+# Text processing
+wc file.txt             # Word count
+wc -l file.txt          # Line count
+sort file.txt           # Sort lines
+uniq file.txt           # Remove duplicates
+cut -d',' -f1,3 file.csv    # Extract columns</code></pre>
+
+                <h3>2.3 System Information</h3>
+                <pre><code># System information
+uname -a                # System info
+hostname                # Host name
+uptime                  # System uptime
+whoami                  # Current user
+w                       # Who is logged in
+
+# Resource usage
+top                     # Process monitor
+htop                    # Better process monitor
+free -h                 # Memory usage
+df -h                   # Disk usage
+du -sh directory/       # Directory size
+
+# Process management
+ps aux                  # All processes
+ps aux | grep nginx
+kill &lt;PID&gt;              # Kill process
+killall process_name    # Kill by name
+pkill pattern           # Kill by pattern</code></pre>
+            </section>
+
+            <section id="user-management">
+                <h2>3. User and Permission Management</h2>
+
+                <h3>3.1 User Management</h3>
+                <pre><code># Add user
+sudo useradd -m -s /bin/bash username
+sudo passwd username
+
+# Modify user
+sudo usermod -aG sudo username      # Add to sudo group
+sudo usermod -s /bin/zsh username   # Change shell
+
+# Delete user
+sudo userdel username
+sudo userdel -r username            # Remove home directory
+
+# View users
+cat /etc/passwd
+id username
+groups username</code></pre>
+
+                <h3>3.2 File Permissions</h3>
+                <pre><code># Permission format: rwxrwxrwx (owner, group, others)
+# r=read(4), w=write(2), x=execute(1)
+
+# Change permissions
+chmod 755 script.sh     # rwxr-xr-x
+chmod +x script.sh      # Add execute
+chmod -w file.txt       # Remove write
+chmod u+x,g+r file      # User execute, group read
+
+# Change ownership
+chown user:group file.txt
+chown -R user:group directory/
+
+# View permissions
+ls -l file.txt
+stat file.txt</code></pre>
+
+                <h3>3.3 Sudo and Root Access</h3>
+                <pre><code># Run command as root
+sudo command
+
+# Switch to root
+sudo -i
+sudo su
+
+# Edit sudoers file
+sudo visudo
+
+# Run as different user
+sudo -u username command
+
+# Sudo without password (add to /etc/sudoers)
+username ALL=(ALL) NOPASSWD:ALL</code></pre>
+            </section>
+
+            <section id="shell-scripting">
+                <h2>4. Shell Scripting</h2>
+
+                <h3>4.1 Basic Script Structure</h3>
+                <pre><code>#!/bin/bash
+# Script description
+
+# Variables
+NAME="DevOps"
+COUNT=10
+
+# Echo output
+echo "Hello, $NAME"
+echo "Count: $COUNT"
+
+# Command substitution
+CURRENT_DATE=$(date +%Y-%m-%d)
+USER_COUNT=$(who | wc -l)
+
+# Conditional
+if [ $COUNT -gt 5 ]; then
+    echo "Count is greater than 5"
+elif [ $COUNT -eq 5 ]; then
+    echo "Count equals 5"
+else
+    echo "Count is less than 5"
+fi
+
+# Loops
+for i in {1..5}; do
+    echo "Number: $i"
+done
+
+while [ $COUNT -gt 0 ]; do
+    echo "Countdown: $COUNT"
+    COUNT=$((COUNT - 1))
+    sleep 1
+done
+
+# Functions
+function greet() {
+    local name=$1
+    echo "Hello, $name!"
+}
+
+greet "World"</code></pre>
+
+                <h3>4.2 Practical Examples</h3>
+                <pre><code>#!/bin/bash
+# Backup script
+
+SOURCE_DIR="/var/www"
+BACKUP_DIR="/backups"
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_FILE="backup_${DATE}.tar.gz"
+
+# Create backup
+echo "Starting backup..."
+tar -czf ${BACKUP_DIR}/${BACKUP_FILE} ${SOURCE_DIR}
+
+# Check if successful
+if [ $? -eq 0 ]; then
+    echo "Backup completed: ${BACKUP_FILE}"
+    
+    # Remove backups older than 7 days
+    find ${BACKUP_DIR} -name "backup_*.tar.gz" -mtime +7 -delete
+    echo "Old backups cleaned up"
+else
+    echo "Backup failed!"
+    exit 1
+fi</code></pre>
+            </section>
+
+            <section id="networking">
+                <h2>5. Networking</h2>
+
+                <h3>5.1 Network Configuration</h3>
+                <pre><code># View network interfaces
+ip addr show
+ip a
+ifconfig                # Legacy command
+
+# View routing table
+ip route show
+route -n
+
+# DNS configuration
+cat /etc/resolv.conf
+
+# Test connectivity
+ping google.com
+ping -c 4 8.8.8.8       # Send 4 packets
+
+# Trace route
+traceroute google.com
+mtr google.com          # Better traceroute
+
+# Check open ports
+netstat -tulpn
+ss -tulpn               # Modern alternative
+lsof -i :80             # Check specific port</code></pre>
+
+                <h3>5.2 Firewall (UFW/iptables)</h3>
+                <pre><code># UFW (Ubuntu)
+sudo ufw status
+sudo ufw enable
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw deny 3306
+sudo ufw delete allow 80
+
+# iptables
+sudo iptables -L        # List rules
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -D INPUT -p tcp --dport 80 -j ACCEPT  # Delete</code></pre>
+
+                <h3>5.3 SSH Configuration</h3>
+                <pre><code># Generate SSH key
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+# Copy key to server
+ssh-copy-id user@server
+
+# SSH config (~/.ssh/config)
+Host myserver
+    HostName 192.168.1.100
+    User ubuntu
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519
+
+# Connect
+ssh myserver
+
+# SSH tunneling
+ssh -L 8080:localhost:80 user@server      # Local forward
+ssh -R 8080:localhost:80 user@server      # Remote forward</code></pre>
+            </section>
+
+            <section id="package-management">
+                <h2>6. Package Management</h2>
+
+                <h3>6.1 Ubuntu/Debian (APT)</h3>
+                <pre><code># Update package list
+sudo apt update
+
+# Upgrade packages
+sudo apt upgrade
+sudo apt full-upgrade
+
+# Install package
+sudo apt install nginx
+sudo apt install -y docker.io      # Auto yes
+
+# Remove package
+sudo apt remove nginx
+sudo apt purge nginx               # Remove with config
+sudo apt autoremove                # Remove unused dependencies
+
+# Search packages
+apt search nginx
+apt show nginx
+
+# List installed
+apt list --installed</code></pre>
+
+                <h3>6.2 RHEL/CentOS (YUM/DNF)</h3>
+                <pre><code># Update packages
+sudo yum update
+sudo dnf update
+
+# Install package
+sudo yum install nginx
+sudo dnf install docker
+
+# Remove package
+sudo yum remove nginx
+
+# Search packages
+yum search nginx
+dnf search nginx
+
+# List installed
+yum list installed
+dnf list installed</code></pre>
+            </section>
+
+            <section id="systemd">
+                <h2>7. Service Management (systemd)</h2>
+
+                <h3>7.1 Service Control</h3>
+                <pre><code># Start/stop/restart service
+sudo systemctl start nginx
+sudo systemctl stop nginx
+sudo systemctl restart nginx
+sudo systemctl reload nginx
+
+# Enable/disable on boot
+sudo systemctl enable nginx
+sudo systemctl disable nginx
+
+# Check status
+sudo systemctl status nginx
+systemctl is-active nginx
+systemctl is-enabled nginx
+
+# View logs
+journalctl -u nginx
+journalctl -u nginx -f          # Follow logs
+journalctl -u nginx --since today</code></pre>
+
+                <h3>7.2 Creating a Service</h3>
+                <pre><code># /etc/systemd/system/myapp.service
+[Unit]
+Description=My Application
+After=network.target
+
+[Service]
+Type=simple
+User=appuser
+WorkingDirectory=/opt/myapp
+ExecStart=/opt/myapp/start.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+                <p>Then reload and start:</p>
+                <pre><code>sudo systemctl daemon-reload
+sudo systemctl enable myapp
+sudo systemctl start myapp</code></pre>
+            </section>
+
+            <section id="monitoring">
+                <h2>8. System Monitoring and Performance</h2>
+
+                <h3>8.1 Resource Monitoring</h3>
+                <pre><code># CPU usage
+top
+htop
+mpstat              # Per-CPU statistics
+sar -u 1 10         # CPU usage every 1 sec, 10 times
+
+# Memory
+free -h
+vmstat 1 10
+
+# Disk I/O
+iostat
+iotop
+
+# Network
+iftop
+nethogs
+
+# All in one
+glances</code></pre>
+
+                <h3>8.2 Log Management</h3>
+                <pre><code># System logs
+tail -f /var/log/syslog
+tail -f /var/log/messages
+
+# Application logs
+tail -f /var/log/nginx/access.log
+tail -f /var/log/nginx/error.log
+
+# Journalctl
+journalctl -xe                  # Recent logs with explanation
+journalctl -p err               # Only errors
+journalctl --since "1 hour ago"
+journalctl --until "2024-01-01"
+
+# Log rotation
+cat /etc/logrotate.conf</code></pre>
+            </section>
+
+            <section id="security">
+                <h2>9. Security Best Practices</h2>
+
+                <div class="info-box warning">
+                    <strong>Security Checklist:</strong>
+                    <ul>
+                        <li>✅ Keep system updated: <code>sudo apt update && sudo apt upgrade</code></li>
+                        <li>✅ Use SSH keys instead of passwords</li>
+                        <li>✅ Disable root login: Edit <code>/etc/ssh/sshd_config</code> → <code>PermitRootLogin no</code></li>
+                        <li>✅ Enable firewall: <code>sudo ufw enable</code></li>
+                        <li>✅ Use strong passwords: <code>sudo passwd username</code></li>
+                        <li>✅ Install fail2ban: <code>sudo apt install fail2ban</code></li>
+                        <li>✅ Regular backups and monitoring</li>
+                        <li>✅ Minimal package installation</li>
+                        <li>✅ Use sudo instead of root account</li>
+                        <li>✅ Enable SELinux/AppArmor</li>
+                    </ul>
+                </div>
+
+                <h3>9.1 SSH Hardening</h3>
+                <pre><code># Edit /etc/ssh/sshd_config
+Port 2222                       # Change default port
+PermitRootLogin no
+PasswordAuthentication no       # Use keys only
+PubkeyAuthentication yes
+MaxAuthTries 3
+ClientAliveInterval 300
+ClientAliveCountMax 2
+
+# Restart SSH
+sudo systemctl restart sshd</code></pre>
+
+                <h3>9.2 Fail2Ban Configuration</h3>
+                <pre><code># Install
+sudo apt install fail2ban
+
+# Configuration (/etc/fail2ban/jail.local)
+[DEFAULT]
+bantime = 3600
+findtime = 600
+maxretry = 3
+
+[sshd]
+enabled = true
+port = 2222
+
+# Start service
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Check status
+sudo fail2ban-client status
+sudo fail2ban-client status sshd</code></pre>
+            </section>
+
+            <section id="troubleshooting">
+                <h2>10. Troubleshooting</h2>
+
+                <h3>10.1 Common Issues</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Issue</th>
+                            <th>Diagnosis</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Service won't start</td>
+                            <td><code>systemctl status service</code><br><code>journalctl -u service</code></td>
+                            <td>Check logs, verify config, check permissions</td>
+                        </tr>
+                        <tr>
+                            <td>Disk full</td>
+                            <td><code>df -h</code><br><code>du -sh /*</code></td>
+                            <td>Clean logs, remove old packages, find large files</td>
+                        </tr>
+                        <tr>
+                            <td>High CPU</td>
+                            <td><code>top</code><br><code>ps aux --sort=-%cpu</code></td>
+                            <td>Identify process, optimize or restart</td>
+                        </tr>
+                        <tr>
+                            <td>Network issues</td>
+                            <td><code>ping</code><br><code>traceroute</code><br><code>ss -tulpn</code></td>
+                            <td>Check connectivity, firewall, DNS</td>
+                        </tr>
+                        <tr>
+                            <td>Permission denied</td>
+                            <td><code>ls -l file</code><br><code>namei -l path</code></td>
+                            <td>Fix permissions with chmod/chown</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>10.2 Useful Diagnostic Commands</h3>
+                <pre><code># Find large files
+find / -type f -size +100M
+
+# Find files modified in last 24 hours
+find /var/log -type f -mtime -1
+
+# Check for zombie processes
+ps aux | grep 'Z'
+
+# System resource limits
+ulimit -a
+
+# Open files by process
+lsof -p &lt;PID&gt;
+
+# Check for errors in logs
+dmesg | grep -i error
+journalctl -p err -xe</code></pre>
+            </section>
+
+            <section id="resources">
+                <h2>11. Additional Resources</h2>
+                <ul>
+                    <li><a href="https://linux.die.net/man/" target="_blank">Linux Man Pages</a></li>
+                    <li><a href="https://explainshell.com/" target="_blank">ExplainShell - Command Explanation</a></li>
+                    <li><a href="https://www.tldp.org/" target="_blank">The Linux Documentation Project</a></li>
+                    <li><a href="https://linuxjourney.com/" target="_blank">Linux Journey - Interactive Learning</a></li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 DevOps Yard. Open Source Documentation.</p>
+        </div>
+    </footer>
+</body>
+</html>
