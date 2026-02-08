@@ -1,0 +1,184 @@
+<!--
+TEMPLATE FOR CREATING NEW DOCUMENTATION PAGES
+===============================================
+
+This is a self-contained template with embedded CSS.
+Copy this entire file and replace the placeholders:
+
+PLACEHOLDERS TO REPLACE:
+1. [TOOL_NAME] - e.g., "Kubernetes", "AWS", "Terraform"
+2. [ICON] - e.g., "☸️", "🌩️", "🏗️"
+3. [DESCRIPTION] - Brief description
+4. [CONTENT] - Your documentation content
+
+The CSS is already embedded and will work perfectly!
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[TOOL_NAME] Guide - DevOps Yard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a0e27;
+            --secondary: #1a1f3a;
+            --accent: #00d4ff;
+            --accent-2: #7c3aed;
+            --accent-3: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #ffffff;
+            --bg-alt: #f8fafc;
+            --border: #e2e8f0;
+            --code-bg: #1e293b;
+            --shadow: rgba(15, 23, 42, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'IBM Plex Sans', -apple-system, sans-serif; line-height: 1.7; color: var(--text); background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%); min-height: 100vh; }
+        .navbar { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .navbar .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .navbar-brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: white; font-size: 1.5rem; font-weight: 700; }
+        .home-icon { width: 40px; height: 40px; background: rgba(0, 212, 255, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: all 0.3s ease; }
+        .home-icon:hover { background: var(--accent); transform: scale(1.1); }
+        .navbar-title { font-size: 1.25rem; }
+        .breadcrumb { display: flex; align-items: center; gap: 0.5rem; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; }
+        .breadcrumb a { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb-separator { color: rgba(255, 255, 255, 0.4); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        main { background: white; border-radius: 1rem; padding: 3rem; margin: 3rem auto; box-shadow: 0 10px 15px -3px var(--shadow); }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--primary); margin-bottom: 1rem; letter-spacing: -0.02em; }
+        h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--primary); margin: 2.5rem 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 3px solid var(--accent); font-weight: 700; }
+        h3 { font-size: 1.5rem; color: var(--secondary); margin: 2rem 0 1rem; font-weight: 600; }
+        h4 { font-size: 1.25rem; color: var(--text); margin: 1.5rem 0 0.75rem; font-weight: 600; }
+        p { margin-bottom: 1.25rem; color: var(--text); }
+        pre { background: var(--code-bg); color: #e2e8f0; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem; line-height: 1.6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+        code { font-family: 'IBM Plex Mono', monospace; background: var(--bg-alt); padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-size: 0.9em; color: var(--accent); }
+        pre code { background: transparent; padding: 0; color: inherit; }
+        table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: white; box-shadow: 0 1px 3px 0 var(--shadow); border-radius: 0.5rem; overflow: hidden; }
+        thead { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; }
+        th { padding: 1rem; text-align: left; font-weight: 600; font-size: 0.95rem; }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); }
+        tbody tr:hover { background: var(--bg-alt); }
+        ul, ol { margin: 1.5rem 0; padding-left: 2rem; }
+        li { margin-bottom: 0.75rem; color: var(--text); }
+        .info-box { padding: 1.5rem; border-radius: 0.75rem; margin: 2rem 0; border-left: 4px solid; }
+        .info-box.success { background: rgba(16, 185, 129, 0.05); border-color: var(--success); }
+        .info-box.warning { background: rgba(245, 158, 11, 0.05); border-color: var(--warning); }
+        .info-box.danger { background: rgba(239, 68, 68, 0.05); border-color: var(--danger); }
+        .info-box.info { background: rgba(59, 130, 246, 0.05); border-color: var(--accent); }
+        footer { background: var(--primary); color: rgba(255, 255, 255, 0.8); padding: 2rem 0; margin-top: 4rem; text-align: center; }
+        a { color: var(--accent); text-decoration: none; transition: color 0.3s ease; }
+        a:hover { color: var(--accent-2); text-decoration: underline; }
+        @media (max-width: 768px) { .navbar .container { flex-direction: column; gap: 1rem; } main { padding: 1.5rem; } h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">
+                <div class="home-icon">🏠</div>
+                <span class="navbar-title">DevOps Yard</span>
+            </a>
+            <div class="breadcrumb">
+                <a href="/">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>[TOOL_NAME]</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main>
+            <h1>[ICON] [TOOL_NAME] Guide</h1>
+            <p><strong>[DESCRIPTION]</strong></p>
+
+            <section>
+                <h2>1. Overview</h2>
+                <p>Add your overview content here...</p>
+                
+                <div class="info-box info">
+                    <strong>Key Features:</strong>
+                    <ul>
+                        <li>Feature 1</li>
+                        <li>Feature 2</li>
+                        <li>Feature 3</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>2. Installation</h2>
+                <pre><code># Installation commands
+sudo apt install package-name</code></pre>
+            </section>
+
+            <section>
+                <h2>3. Essential Commands</h2>
+                <pre><code># Basic commands
+command --help
+command --version</code></pre>
+            </section>
+
+            <section>
+                <h2>4. Configuration</h2>
+                <p>Configuration details...</p>
+            </section>
+
+            <section>
+                <h2>5. Best Practices</h2>
+                <div class="info-box success">
+                    <strong>Best Practices:</strong>
+                    <ul>
+                        <li>✅ Best practice 1</li>
+                        <li>✅ Best practice 2</li>
+                        <li>✅ Best practice 3</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2>6. Troubleshooting</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Issue</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Common issue 1</td>
+                            <td>Solution 1</td>
+                        </tr>
+                        <tr>
+                            <td>Common issue 2</td>
+                            <td>Solution 2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>7. Resources</h2>
+                <ul>
+                    <li><a href="#" target="_blank">Official Documentation</a></li>
+                    <li><a href="#" target="_blank">GitHub Repository</a></li>
+                    <li><a href="#" target="_blank">Community Forum</a></li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 DevOps Yard. Open Source Documentation.</p>
+        </div>
+    </footer>
+</body>
+</html>
